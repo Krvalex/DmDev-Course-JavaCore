@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation group: 'org.reflections', name: 'reflections', version: '0.9.12'
+    implementation group: 'cglib', name: 'cglib', version: '3.3.0'
+    implementation group: 'javax.annotation', name: 'jsr250-api', version: '1.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task runApp(type: JavaExec) {
+    // Для запуска с '--add-opens'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'spring.Main'
+
+    systemProperty 'java.util.logging.SimpleFormatter.format', '%1$tb %1$td %1$tY %1$tl:%1$tM:%1$tS.%1$tL %1$Tp %2$s%n%4$s: %5$s%n%6$s'
+    // Для запуска с '--add-exports'
+    // systemProperty 'java.util.logging.SimpleFormatter.format', '%1$tb %1$td %1$tY %1$tl:%1$tM:%1$tS.%1$tL %1$Tp %2$s%n%4$s: %5$s%n%6$s'
+    jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED" // или "--add-exports=java.base/java.lang=ALL-UNNAMED"
+}
